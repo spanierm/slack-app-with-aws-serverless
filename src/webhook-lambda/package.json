@@ -1,0 +1,45 @@
+{
+    "name": "slack-app-with-asw-serverless-webhook-lambda",
+    "version": "0.0.1",
+    "description": "The lambda handling all requests triggered by the Slack app",
+    "main": "index.js",
+    "scripts": {
+        "build": "tsc",
+        "pretest": "tsc",
+        "test": "jest"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/spanierm/slack-app-with-aws-serverless.git"
+    },
+    "keywords": [
+        "typescript",
+        "cdk",
+        "aws",
+        "serverless",
+        "slack"
+    ],
+    "author": "Markus Spanier",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/spanierm/slack-app-with-aws-serverless/issues"
+    },
+    "homepage": "https://github.com/spanierm/slack-app-with-aws-serverless#readme",
+    "dependencies": {
+        "aws-sdk": "^2.740.0"
+    },
+    "devDependencies": {
+        "@types/aws-lambda": "^8.10.61",
+        "@types/jest": "^26.0.10",
+        "@types/node": "^14.6.0",
+        "jest": "^26.4.2",
+        "ts-jest": "^26.3.0",
+        "typescript": "^4.0.2"
+    },
+    "jest": {
+        "testRegex": "/webhook-lambda/.*(spec|test)\\.ts?$",
+        "transform": {
+            "^.+\\.ts?$": "ts-jest"
+        }
+    }
+}

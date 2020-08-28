@@ -1,0 +1,41 @@
+{
+    "name": "slack-app-with-aws-serverless-infrastructure",
+    "version": "0.0.1",
+    "description": "CDK code for a serverless Slack app in AWS using a REST API with a custom authorizer and DynamoDB for persistence",
+    "bin": {
+        "infrastructure": "bin/infrastructure.js"
+    },
+    "scripts": {
+        "build": "tsc",
+        "cdk": "cdk",
+        "synthesize": "npm run build && npm run cdk -- synthesize"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/spanierm/slack-app-with-aws-serverless.git"
+    },
+    "keywords": [
+        "typescript",
+        "cdk",
+        "aws",
+        "serverless",
+        "slack"
+    ],
+    "author": "Markus Spanier",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/spanierm/slack-app-with-aws-serverless/issues"
+    },
+    "homepage": "https://github.com/spanierm/slack-app-with-aws-serverless#readme",
+    "dependencies": {
+        "@aws-cdk/aws-apigatewayv2": "^1.61.0",
+        "@aws-cdk/aws-dynamodb": "^1.61.0",
+        "@aws-cdk/aws-lambda": "^1.61.0",
+        "@aws-cdk/aws-logs": "^1.61.0",
+        "@aws-cdk/core": "^1.61.0"
+    },
+    "devDependencies": {
+        "aws-cdk": "^1.61.0",
+        "typescript": "^4.0.2"
+    }
+}
