@@ -1,8 +1,8 @@
+import * as apiGatewayV2 from '@aws-cdk/aws-apigatewayv2';
 import * as dynamoDb from '@aws-cdk/aws-dynamodb';
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as logs from '@aws-cdk/aws-logs';
 import * as cdk from '@aws-cdk/core';
-import * as apiGateway from '@aws-cdk/aws-apigateway';
 
 interface InfrastructureStackProps extends cdk.StackProps {
     appName: string;
@@ -30,14 +30,16 @@ export class InfrastructureStack extends cdk.Stack {
         });
         props.dynamoDbTable.grantReadWriteData(webhookLambda);
 
-        const restApi = new apiGateway.LambdaRestApi(this, 'RestApi', {
-            proxy: false,
-            restApiName: 'slack-webhook',
-            handler: webhookLambda,
+        const httpApi = new apiGatewayV2.HttpApi(this, 'HttpApi', {
+            apiName: 'slack-webhook',
         });
-        restApi.root
-            .addResource(lambdaType.language.toLowerCase())
-            .addMethod('POST', new apiGateway.LambdaIntegration(webhookLambda));
+        httpApi.addRoutes({
+            path: `/${lambdaType.language}`,
+            methods: [apiGatewayV2.HttpMethod.POST],
+            integration: new apiGatewayV2.LambdaProxyIntegration({
+                handler: webhookLambda,
+            }),
+        });
     }
 }
 
