@@ -35,5 +35,8 @@
     },
     "lint-staged": {
         "*.{ts,tsx,json,css,scss,html,md}": "npm run format"
+    },
+    "dependencies": {
+        "@aws-cdk/aws-apigateway": "^1.61.0"
     }
 }
