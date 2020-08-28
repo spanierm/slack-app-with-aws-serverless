@@ -7,14 +7,6 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(
-            {
-                headers: event.headers,
-                body: event.body,
-                'query-params': event.queryStringParameters,
-            },
-            null,
-            2
-        ),
+        body: JSON.stringify(event, null, 2),
     };
 };

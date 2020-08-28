@@ -3,7 +3,6 @@ import * as lambda from '@aws-cdk/aws-lambda';
 import * as logs from '@aws-cdk/aws-logs';
 import * as cdk from '@aws-cdk/core';
 import * as apiGateway from '@aws-cdk/aws-apigateway';
-import { AuthorizationType } from '@aws-cdk/aws-apigateway';
 
 interface InfrastructureStackProps extends cdk.StackProps {
     appName: string;
@@ -15,13 +14,15 @@ export class InfrastructureStack extends cdk.Stack {
     constructor(scope: cdk.Construct, id: string, props: InfrastructureStackProps) {
         super(scope, id, props);
 
+        const lambdaType: LambdaType = typeScriptLambda;
         const webhookLambdaName = 'webhook-lambda';
+
         const webhookLambda = new lambda.Function(this, 'WebhookLambda', {
-            runtime: lambda.Runtime.NODEJS_12_X,
-            description: 'Webhook called by the Slack slash command',
-            code: lambda.Code.fromAsset(`../src/${webhookLambdaName}`),
+            runtime: lambdaType.runtime,
+            description: `(${lambdaType.language}) Webhook called by the Slack slash command`,
+            code: lambda.Code.fromAsset(`${lambdaType.localLocation}/${webhookLambdaName}`),
             handler: 'lambda.handler',
-            functionName: `${props.appName}-${webhookLambdaName}`,
+            functionName: `${props.appName}-${webhookLambdaName}-${lambdaType.language}`,
             logRetention: logs.RetentionDays.ONE_WEEK,
             environment: {
                 TABLE_NAME: props.dynamoDbTable.tableName,
@@ -29,34 +30,25 @@ export class InfrastructureStack extends cdk.Stack {
         });
         props.dynamoDbTable.grantReadWriteData(webhookLambda);
 
-        const authorizerLambdaName = 'authorizer-lambda';
-        const authorizerLambda = new lambda.Function(this, 'AuthorizerLambda', {
-            runtime: lambda.Runtime.NODEJS_12_X,
-            description: 'Authorizer for Slack slash command',
-            code: lambda.Code.fromAsset(`../src/${authorizerLambdaName}`),
-            handler: 'lambda.handler',
-            functionName: `${props.appName}-${authorizerLambdaName}`,
-            logRetention: logs.RetentionDays.ONE_WEEK,
-            environment: {
-                TABLE_NAME: props.dynamoDbTable.tableName,
-            },
-        });
-
-        // const authorizer = new apiGateway.RequestAuthorizer(this, 'Authorizer', {
-        //     handler: authorizerLambda,
-        //     identitySources: [
-        //         apiGateway.IdentitySource.header('X-Slack-Signature'),
-        //         apiGateway.IdentitySource.header('X-Slack-Request-Timestamp'),
-        //     ],
-        // });
-
-        new apiGateway.LambdaRestApi(this, 'RestApi', {
+        const restApi = new apiGateway.LambdaRestApi(this, 'RestApi', {
+            proxy: false,
             restApiName: 'slack-webhook',
             handler: webhookLambda,
-            // defaultMethodOptions: {
-            //     authorizationType: AuthorizationType.CUSTOM,
-            //     authorizer,
-            // },
         });
+        restApi.root
+            .addResource(lambdaType.language.toLowerCase())
+            .addMethod('POST', new apiGateway.LambdaIntegration(webhookLambda));
     }
 }
+
+interface LambdaType {
+    language: string;
+    runtime: lambda.Runtime;
+    localLocation: string;
+}
+
+const typeScriptLambda: LambdaType = {
+    language: 'TypeScript',
+    runtime: lambda.Runtime.NODEJS_12_X,
+    localLocation: '../src/typescript',
+};
