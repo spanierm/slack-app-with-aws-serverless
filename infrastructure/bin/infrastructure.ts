@@ -3,10 +3,10 @@ import { PersistenceStack } from '../lib/persistence-stack';
 import * as cdk from '@aws-cdk/core';
 import { InfrastructureStack } from '../lib/infrastructure-stack';
 
-const environment = { account: undefined, region: 'eu-central-1' };
+// TODO Set your account ID and region here.
+const environment = { account: '', region: 'eu-central-1' };
 
 const appName = 'slack-app-with-aws-serverless';
-const slackKeyParameterName = `/config/${appName}/slack-key`;
 
 const app = new cdk.App();
 const persistenceStack = new PersistenceStack(app, `${appName}-persistence`, {
@@ -17,5 +17,4 @@ new InfrastructureStack(app, `${appName}-infrastructure`, {
     env: environment,
     appName,
     dynamoDbTable: persistenceStack.dynamoDbTable,
-    slackKeyParameterName,
 });

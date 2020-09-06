@@ -28,14 +28,15 @@
     },
     "homepage": "https://github.com/spanierm/slack-app-with-aws-serverless#readme",
     "dependencies": {
-        "@aws-cdk/aws-apigatewayv2": "^1.61.0",
-        "@aws-cdk/aws-dynamodb": "^1.61.0",
-        "@aws-cdk/aws-lambda": "^1.61.0",
-        "@aws-cdk/aws-logs": "^1.61.0",
-        "@aws-cdk/core": "^1.61.0"
+        "@aws-cdk/aws-apigatewayv2": "^1.62.0",
+        "@aws-cdk/aws-dynamodb": "^1.62.0",
+        "@aws-cdk/aws-iam": "^1.62.0",
+        "@aws-cdk/aws-lambda": "^1.62.0",
+        "@aws-cdk/aws-logs": "^1.62.0",
+        "@aws-cdk/core": "^1.62.0"
     },
     "devDependencies": {
-        "aws-cdk": "^1.61.0",
+        "aws-cdk": "^1.62.0",
         "typescript": "^4.0.2"
     }
 }
